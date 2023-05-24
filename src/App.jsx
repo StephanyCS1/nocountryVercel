@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<AuthLayout />}>
           <Route index element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="register" element={<Register />} />
         </Route>
         <Route path="/tastes" element={<CategorySelection />} />
           <Route path="/restaurant/:id" element={<RestaurantView/>}/>

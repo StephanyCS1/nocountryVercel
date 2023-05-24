@@ -13,6 +13,7 @@ export function RegisterForm() {
     })
 
     const naveg = useNavigate();
+    
     function resetFields () { setValues({...values, nombre : '', correo : '', contrasena: ''})}
     function handleChange (event) {
         const {name, value} = event.target
