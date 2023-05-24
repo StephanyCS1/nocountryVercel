@@ -2,6 +2,7 @@ import { useState } from "react"
 import { loginUser } from "../../services"
 import { toast } from "react-hot-toast"
 import { LoginGoogleButton } from "./LoginGoogleButton"
+import { useNavigate } from 'react-router-dom';
 export  function LoginForm() {
 
 
@@ -11,7 +12,7 @@ const [dataLogin, setDataLogin] = useState({
     contrasena : ''
 })
 
-
+const naveg = useNavigate();
 function handleChange (e) { setDataLogin({
     ...dataLogin,
     [e.target.name] : e.target.value}) }
@@ -23,6 +24,7 @@ async function handleSubmit (event) {
         const res = await loginUser(dataLogin)
         toast.success(res.data.mensaje)
         setIsError(false)
+        naveg('/')
     } catch (error) {
         const errorMessage = 'La contraseña o el correo son incorrectas'
         toast.error(errorMessage)

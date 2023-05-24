@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { registerUser } from "../../services"
 import { toast } from "react-hot-toast"
+import { useNavigate } from 'react-router-dom';
 
 export function RegisterForm() {
 
@@ -11,7 +12,7 @@ export function RegisterForm() {
         contrasena: ''
     })
 
-
+    const naveg = useNavigate();
     function resetFields () { setValues({...values, nombre : '', correo : '', contrasena: ''})}
     function handleChange (event) {
         const {name, value} = event.target
@@ -28,6 +29,7 @@ export function RegisterForm() {
             toast.success(res.data.mensaje)
             setIsError(false)
             resetFields()
+            naveg('/tastes')
         } catch (error) {
             const errorMessage = error.response.data.data.errors[0].msg
             toast.error(errorMessage)
