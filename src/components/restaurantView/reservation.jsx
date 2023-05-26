@@ -7,7 +7,7 @@ const ReservationForm = () => {
 
         <div className={'border-2 border-black rounded-lg w-reservationForm h-reservationForm'}>
             <form className={'flex flex-col '}>
-                <div className={'flex flex row justify-between p-4'}>
+                <div className={'flex flex-row justify-between p-4'}>
                     <label>Fecha</label>
                     <select>
                         <option className={'text-base'} value="12/04">12/04</option>
@@ -15,7 +15,7 @@ const ReservationForm = () => {
                         <option className={'text-base'} value="14/04">14/04</option>
                     </select>
                 </div>
-                <div className={'flex flex row justify-between p-4'}>
+                <div className={'flex flex-row justify-between p-4'}>
                     <label>Cantidad Personas</label>
                     <select>
                         <option className={'text-base'} value="1">1</option>
@@ -23,7 +23,7 @@ const ReservationForm = () => {
                         <option className={'text-base'} value="3">3</option>
                     </select>
                 </div>
-                <div className={'flex flex row justify-between p-4'}>
+                <div className={'flex flex-row justify-between p-4'}>
                     <label>Hora</label>
                     <select>
                         <option className={'text-base'} value="7:30">7:30</option>
