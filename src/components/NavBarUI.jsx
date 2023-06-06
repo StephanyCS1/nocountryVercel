@@ -5,9 +5,11 @@ import { NavBarBottom } from './NavBarBottom';
 
 export function NavBarUI() {
 
+    const [openNavBar, setOpenNavBar] = React.useState(false);
+    const [openDropdown, setOpenDropdawn] = React.useState(false)
+    
     const initialState = window.innerWidth < 768 ? false : true;
     const [isDesktop, setIsDesktop] = React.useState(initialState);
-    const [openNavBar, setOpenNavBar] = React.useState(false);
   
     React.useEffect(() => {
       function handleResize() {
@@ -21,9 +23,27 @@ export function NavBarUI() {
       return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+    const handleChangeNavbar = () =>{ 
+        setOpenNavBar(prev => !prev)
+        setOpenDropdawn(false)
+    }
+
+    const handleChangeDrop = () => {
+      setOpenDropdawn(prev => !prev)
+      setOpenNavBar(false)
+    }
+
+
+
+
   return (
     <>
-      <NavBar openNavBar={openNavBar} setOpenNavBar={setOpenNavBar} isDesktop={isDesktop}/>
+      <NavBar 
+        isOpenNavbar={openNavBar} 
+        isOpenDrop={openDropdown}
+        onDropdown={handleChangeDrop} 
+        onNavbar={handleChangeNavbar} 
+        isDesktop={isDesktop}/>
       
     {
       !isDesktop && (
