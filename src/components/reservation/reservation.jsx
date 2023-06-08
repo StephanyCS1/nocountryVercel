@@ -5,11 +5,10 @@ import calendar from '../../assets/calendar.svg';
 import clock from '../../assets/clock.svg';
 import user from '../../assets/user.svg';
 import {useNavigate} from 'react-router-dom';
-import {getAvailableCostumers, makeReservation} from '../../services/index.js';
+import {getAvailableCustomers, makeReservation} from '../../services/index.js';
 import {toast} from "react-hot-toast";
 
-const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
-
+const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes, turnos, restaurantEmail}) => {
     const [actions, setActions] = useState({
         error: false,
         loading: false
@@ -29,6 +28,10 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
     const idRest = restaurant
     const reserveDate = localStorage.getItem('dateReserve');
 
+    const restoData = {
+        imagenes: restaurantImagenes,
+        nombre: restaurantNombre
+    }
 
     const availableHours = (startHour, finalHour, duration) => {
 
@@ -51,7 +54,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
         if (selectedHour !== undefined && selectedDate !== undefined) {
             const fetchData = async () => {
                 try {
-                    const response = await getAvailableCostumers(idRest, reserveDate, selectedHour);
+                    const response = await getAvailableCustomers(idRest, reserveDate, selectedHour);
                     setCustomers(response);
                 } catch (error) {
                     console.error('Error fetching customers:', error);
@@ -60,11 +63,6 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
             fetchData();
         }
     },);
-    const dataEditing = {
-        turnos: availableShifts,
-        personas: customers
-    }
-    localStorage.setItem('editReservation', dataEditing)
     const handleOpenModal = (e) => {
         e.preventDefault();
         setShowCalendar(true);
@@ -93,7 +91,6 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
 
     localStorage.setItem('reservationHour', hour)
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
         const reservationData = {
@@ -103,7 +100,6 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
             comensales: parseInt(selectedDiners),
             fecha: reserveDate
         };
-        console.log(reservationData)
         try {
             setActions({...actions, loading: true})
             makeReservation(reservationData)
@@ -114,15 +110,15 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
             toast.error(errorMessage)
             setActions({loading: false, error: true})
         }
-
-        navigate(`/reserve`, {state: {restaurant, reservationData}});
+        console.log(`Se esta por ejecutar navigate a reserve`)
+        navigate(`/reserve`, {state: {restoData, reservationData}});
     };
 
     return (
-        <div className={'bg-bg-hover mx-auto rounded-lg p-2 w-80 lg:w-reservationForm lg:h-reservationForm'}>
+        <div className={'mx-auto rounded-lg p-2.5    border shadow font-inter'}>
             <form onSubmit={handleSubmit} className={'flex flex-col gap-5'}>
-                <div className='flex flex-row text-xs justify-around bg-white rounded-full'>
-                    <div className='flex flex-row justify-between gap-1 items-center py-2 pl-3'>
+                <div className='flex flex-col gap-y-2 text-xs justify-around bg-white rounded-full'>
+                    <div className='flex border rounded-lg shadow flex-row justify-between gap-1 items-center py-2 pl-3'>
                         <img src={calendar} alt='calendar' width={20} height={20} className='left-2'/>
                         <h3>{reserveDate}</h3>
                         <button onClick={handleOpenModal}>
@@ -137,7 +133,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
                             </div>
                         )}
                     </div>
-                    <div className={'flex flex row justify-between py-2 px-1 static'}>
+                    <div className={'flex border rounded-lg shadow  justify-between py-2 px-1 static'}>
                         <img src={clock} alt='clock' width={20} height={20} className='left-2'/>
                         <select value={selectedHour} onChange={handleHour} className={'p-2 rounded'}>
                             {availableShifts.map((hora, index) => (
@@ -147,7 +143,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
                             ))}
                         </select>
                     </div>
-                    <div className={'flex flex row justify-between py-2 px-2 static'}>
+                    <div className={'flex border rounded-lg shadow justify-between py-2 px-2 static'}>
                         <img src={user} alt='user' width={20} height={20} className='left-2'/>
                         <select value={selectedDiners} onChange={handleDiners} className='p-2.5 rounded'>
                             <option value=''>0</option>
@@ -161,7 +157,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
                 </div>
                 {customers === 0 ? (
                     <button
-                        className='whitespace-nowrap h-12 text-center text-sm flex justify-center items-center rounded-full bg-bg-dark text-letter-color'
+                        className='whitespace-nowrap h-12 text-center text-sm flex justify-center items-center rounded-full font-inter bg-bg-dark text-letter-color'
                         type='submit'
                         disabled
                     >
@@ -169,7 +165,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
                     </button>
                 ) : (
                     <button
-                        className='whitespace-nowrap h-12 text-center text-sm flex justify-center items-center rounded-full bg-bg-dark text-letter-color'
+                        className='whitespace-nowrap h-12 text-center text-sm flex justify-center font-inter items-center rounded-full bg-bg-dark text-letter-color'
                         type='submit'
                     >
                         Reservar

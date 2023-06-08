@@ -16,9 +16,8 @@ export function MyReservationList({email}) {
     useEffect(() => {
         listReservation(email)
             .then((res) => {
-                console.log(res.data.reservas);
-                setListReservations(res.data.reservas);
-                const ids = res.data.reservas.map((reserva) => reserva.id_restaurante);
+                setListReservations(res.reservas);
+                const ids = res.reservas.map((reserva) => reserva.id_restaurante);
                 setIdRestaurants(ids);
             })
             .catch((error) => {
