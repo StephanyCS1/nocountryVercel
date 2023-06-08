@@ -78,8 +78,7 @@ export function ListaMenu() {
         try {
             const data = dataNewRestaurant()
             await newRestaurant(data)
-            console.log(data)
-            toast.success('Su restaurante ha sido creado sastifactoriamente!')
+            toast.success('Su restaurante a sido  creado sastifactoriamente!')
             removeDataLocalStorage()
             navigate('/')
         } catch (error) {

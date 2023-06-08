@@ -9,6 +9,7 @@ import {getAvailableCostumers, makeReservation} from '../../services/index.js';
 import {toast} from "react-hot-toast";
 
 const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
+
     const [actions, setActions] = useState({
         error: false,
         loading: false
@@ -59,6 +60,11 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
             fetchData();
         }
     },);
+    const dataEditing = {
+        turnos: availableShifts,
+        personas: customers
+    }
+    localStorage.setItem('editReservation', dataEditing)
     const handleOpenModal = (e) => {
         e.preventDefault();
         setShowCalendar(true);
@@ -87,6 +93,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
 
     localStorage.setItem('reservationHour', hour)
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const reservationData = {
@@ -96,6 +103,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
             comensales: parseInt(selectedDiners),
             fecha: reserveDate
         };
+        console.log(reservationData)
         try {
             setActions({...actions, loading: true})
             makeReservation(reservationData)
@@ -111,7 +119,7 @@ const ReservationForm = ({days, restaurant, turnos, restaurantEmail}) => {
     };
 
     return (
-        <div className={'bg-bg-hover mx-auto rounded-lg p-2 w-80'}>
+        <div className={'bg-bg-hover mx-auto rounded-lg p-2 w-80 lg:w-reservationForm lg:h-reservationForm'}>
             <form onSubmit={handleSubmit} className={'flex flex-col gap-5'}>
                 <div className='flex flex-row text-xs justify-around bg-white rounded-full'>
                     <div className='flex flex-row justify-between gap-1 items-center py-2 pl-3'>
