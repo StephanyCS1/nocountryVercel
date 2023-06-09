@@ -8,7 +8,7 @@ import {useNavigate} from 'react-router-dom';
 import {getAvailableCustomers, makeReservation} from '../../services/index.js';
 import {toast} from "react-hot-toast";
 
-const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes, turnos, restaurantEmail}) => {
+const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes, turnos, userEmail}) => {
     const [actions, setActions] = useState({
         error: false,
         loading: false
@@ -18,7 +18,7 @@ const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes
     const [showCalendar, setShowCalendar] = useState(false);
     const [hideButtonImage, setHideButtonImage] = useState(false);
     const [selectedHour, setSelectedHour] = useState();
-    const [selectedDiners, setSelectedDiners] = useState();
+    const [selectedDiners, setSelectedDiners] = useState(0);
     const [selectedDate, setSelectedDate] = useState(null);
     const [customers, setCustomers] = useState();
 
@@ -28,6 +28,7 @@ const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes
     const idRest = restaurant
     const reserveDate = localStorage.getItem('dateReserve');
 
+    console.log(reserveDate)
     const restoData = {
         imagenes: restaurantImagenes,
         nombre: restaurantNombre
@@ -74,7 +75,9 @@ const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes
     };
 
     const handleDiners = (e) => {
+        console.log(e.target.value)
         setSelectedDiners(e.target.value);
+
     };
 
     const handleHour = (e) => {
@@ -91,31 +94,34 @@ const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes
 
     localStorage.setItem('reservationHour', hour)
 
-    const handleSubmit = (e) => {
+
+    async function handleSubmit(e){
         e.preventDefault();
         const reservationData = {
             id_restaurante: idRest,
-            correoComensal: restaurantEmail,
+            correoComensal: userEmail,
             turno: parseInt(selectedHour),
             comensales: parseInt(selectedDiners),
             fecha: reserveDate
         };
         try {
             setActions({...actions, loading: true})
-            makeReservation(reservationData)
-            navigate('/')
+            await makeReservation(reservationData)
             setActions({loading: false, error: false})
+            toast.success('Su reserva fue generada correctamente')
+            
         } catch (e) {
-            const errorMessage = 'Error al crear el restaurante'
+            const errorMessage = 'Error al generar la reserva'
             toast.error(errorMessage)
             setActions({loading: false, error: true})
         }
         console.log(`Se esta por ejecutar navigate a reserve`)
         navigate(`/reserve`, {state: {restoData, reservationData}});
+        
     };
 
     return (
-        <div className={'mx-auto rounded-lg p-2.5    border shadow font-inter'}>
+        <div className={'mx-auto rounded-lg p-2.5    border shadow font-inter mb-4'}>
             <form onSubmit={handleSubmit} className={'flex flex-col gap-5'}>
                 <div className='flex flex-col gap-y-2 text-xs justify-around bg-white rounded-full'>
                     <div className='flex border rounded-lg shadow flex-row justify-between gap-1 items-center py-2 pl-3'>
@@ -146,7 +152,6 @@ const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes
                     <div className={'flex border rounded-lg shadow justify-between py-2 px-2 static'}>
                         <img src={user} alt='user' width={20} height={20} className='left-2'/>
                         <select value={selectedDiners} onChange={handleDiners} className='p-2.5 rounded'>
-                            <option value=''>0</option>
                             {Array.from({length: customers}).map((_, index) => (
                                 <option key={index} value={index.toString()}>
                                     {index}
@@ -155,17 +160,17 @@ const ReservationForm = ({days, restaurant, restaurantNombre, restaurantImagenes
                         </select>
                     </div>
                 </div>
-                {customers === 0 ? (
+                {selectedDiners == 0 ? (
                     <button
                         className='whitespace-nowrap h-12 text-center text-sm flex justify-center items-center rounded-full font-inter bg-bg-dark text-letter-color'
-                        type='submit'
+                        type='button'
                         disabled
                     >
                         Reservar
                     </button>
                 ) : (
                     <button
-                        className='whitespace-nowrap h-12 text-center text-sm flex justify-center font-inter items-center rounded-full bg-bg-dark text-letter-color'
+                        className='whitespace-nowrap h-12 text-center text-sm flex justify-center font-inter items-center rounded-full bg-bg-dark text-letter-color hover:scale-[1.03] transition-transform'
                         type='submit'
                     >
                         Reservar

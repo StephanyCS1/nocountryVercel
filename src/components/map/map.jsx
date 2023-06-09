@@ -1,5 +1,4 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useRef} from "react";
 import {MapContainer, Marker, Popup, TileLayer} from 'react-leaflet';
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -11,8 +10,8 @@ const iconMarker = new L.Icon({
 
 })
 
-const MapRestaurant = ({latitude, longitude, name, height, width}) => {
-    const position = {lat: latitude, lng: longitude};
+const MapRestaurant = ({latitude, longitude, restaurant, height, width}) => {
+    const position = [latitude, longitude];
     return (
         <MapContainer className={`${height} ${width} mx-auto`} center={position} zoom={16} scrollWheelZoom={false}>
             <TileLayer
@@ -20,8 +19,8 @@ const MapRestaurant = ({latitude, longitude, name, height, width}) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <Marker position={position} marker={iconMarker}>
-                <Popup>
-                    {name}
+                <Popup >
+                    <img src={restaurant?.imagenes} alt={restaurant?.nombre} className='w-28  rounded'/>
                 </Popup>
             </Marker>
         </MapContainer>
